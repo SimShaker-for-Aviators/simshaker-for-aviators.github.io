@@ -12,7 +12,7 @@ SimShaker for Aviators (SSA) is a software application designed for flight simul
   - 1 to 6 bass-shakers (with the payware Sound Module addon by Andre - [SimShaker Sound Module](https://simshaker.com/software/general/sound/)) 
 
 ## Supported Games:
-  - Microsoft Flight Simulator 2020
+  - Microsoft Flight Simulator 2020 & 2024
   - DCS World & MCS
   - Prepar3D
   - Microsoft Flight Simulator X
