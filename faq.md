@@ -37,3 +37,10 @@ If you comment this line out by adding -- in front of it as below:
 --local HFSlfs=require('lfs');dofile(HFSlfs.writedir()..'Scripts/HFSExport.lua')
 ```
 the conflict will be resolved without NLR HFS deletion. 
+
+## Q: Some effects are missing for 3rd party MSFS planes?
+**A:** Some planes use custom LVARs, to read these LVARs, please install the *MSFS Bridge* plugin by enabling the checkbox in the *Special Options* tab. 
+
+![MSFS Bridge](assets/img/MSFS_WASM_Bridge.png?raw=true "MSFS Bridge")
+
+Please point the plugin installer to your MSFS community folder. If you use MSFS 2020 and 2024, redo the process for the other simulator. Alternativly, you can copy the *SSA WASM Bridge* plugin folder manually to the other community folder.
