@@ -1,4 +1,6 @@
 <img src="simshakerForAviatorsLogo_small.png" align="right" />
+<link rel="shortcut icon" type="image/png" href="simshakerForAviatorsLogo_small.png">
+
 
 # SimShaker for Aviators
 
