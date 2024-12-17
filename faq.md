@@ -43,4 +43,4 @@ the conflict will be resolved without NLR HFS deletion.
 
 ![MSFS Bridge](assets/img/MSFS_WASM_Bridge.png?raw=true "MSFS Bridge")
 
-Please point the plugin installer to your MSFS community folder. If you use MSFS 2020 and 2024, redo the process for the other simulator. Alternativly, you can copy the *SSA WASM Bridge* plugin folder manually to the other community folder.
+Please point the plugin installer to your MSFS community folder. If you use MSFS 2020 and 2024, redo the process for the other simulator. Alternatively, you can copy the *SSA WASM Bridge* plugin folder manually to the other community folder.
