@@ -9,6 +9,11 @@ If your question is not answered, please contact me.
 
 ## Q: Which network ports uses SSA?
 **A:** SSA uses Port **29375 (UDP)** and **12842 (TCP)** to communicate with DCS lua files. For MSFS/FSX is uses SimConnect and for XPlane 11/12 **54930**.
+You can use netstat to determine to processes which uses the port
+```
+netstat -ano  | findstr "12842"
+```
+You can find the corresponding application with the Windows TaskManager (details page).
 
 ## Q: SSA does not connect to DCS?
 **A:** SSA uses UPD/TCP to send data to DCS, a firewall or VPN can block this communication, thus check if the traffic is blocked or routed through the VPN.
