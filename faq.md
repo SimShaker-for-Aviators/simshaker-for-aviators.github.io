@@ -49,3 +49,6 @@ the conflict will be resolved without NLR HFS deletion.
 ![MSFS Bridge](assets/img/MSFS_WASM_Bridge.png?raw=true "MSFS Bridge")
 
 Please point the plugin installer to your MSFS community folder. If you use MSFS 2020 and 2024, redo the process for the other simulator. Alternatively, you can copy the *SSA WASM Bridge* plugin folder manually to the other community folder.
+
+## Q: Does SSA conflict with Vaicom?
+**A:** You can run both simultaneously; however, we’ve received reports suggesting that the SimShaker entries in the export.lua file should be placed below the VAICOM entry. If you experience any issues, try manually moving the SimShaker lines below the VAICOM lines in the file.
