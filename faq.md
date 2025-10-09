@@ -7,6 +7,9 @@ css: "/assets/css/btn.css"
 
 If your question is not answered, please contact me.
 
+## Q: SSA is detected as malware, e.g. Trojan:Script/Wacatac.C!ml
+**A:** Microsoft defender, especially using the cloud protection / smart screen, tend to classify SSA as malware since it connects to USB devices and talks to other applications (DCS, MSFS) via network protocol. Once I receive such report, I contact Microsoft to exclude SSA from the threat list. This may take a few hours/days. This has to be done for each release manually. 
+
 ## Q: Which network ports uses SSA?
 **A:** SSA uses Port **29375 (UDP)** and **12842 (TCP)** to communicate with DCS lua files. For MSFS/FSX is uses SimConnect and for XPlane 11/12 **54930**.
 You can use netstat to determine to processes which uses the port
