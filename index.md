@@ -40,6 +40,9 @@ Beta releases are released more often and include the newest features but may la
 ## Update your SimShaker for Aviators installation
 Once you installed a stable or beta version, SSA will automatically check for new releases. This behavior can be disabled in the settings. Please be aware, that you stay in your current track. So if you use the beta, SSA will check for a new beta release, vice versa for stable installations. 
 
+## SimShaker for Aviators Manual
+There are some basic instructions bundled with the installation. For the Tester application go to this site: [SSA Tester Manual](tester.md).
+
 ## Bugs and feature requests
 Have a bug or a feature request? Please first search for existing and closed issues. If your problem or idea is not addressed yet, [please open a new issue](https://github.com/SimShaker-for-Aviators/SimShaker-for-Aviators-Releases/issues). Alternatively join or Discord community and contact me there.
 
