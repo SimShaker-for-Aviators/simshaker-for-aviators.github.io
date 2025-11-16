@@ -37,6 +37,14 @@ Beta releases are released more often and include the newest features but may la
   <div id="beta-release-info"></div>
 </div>
 
+## Latest alpha release
+The SSA 3 alpha is based on a new implementation in settings are incompatible between SSA 2 and SSA 3. In the future, SSA 2 will be deprecated. 
+
+<div id="alpha-download-area">
+  <button id="alpha-download-button" class="button" disabled>Download</button>
+  <div id="alpha-release-info"></div>
+</div>
+
 ## Update your SimShaker for Aviators installation
 Once you installed a stable or beta version, SSA will automatically check for new releases. This behavior can be disabled in the settings. Please be aware, that you stay in your current track. So if you use the beta, SSA will check for a new beta release, vice versa for stable installations. 
 

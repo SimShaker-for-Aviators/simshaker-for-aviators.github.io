@@ -7,11 +7,27 @@ async function getLatestRelease(owner, repo, tagNamePrefix) {
     // Sort the releases by created_at
     data.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
   
-    const betaReleases = data.filter(release => release.tag_name.startsWith(tagNamePrefix));
-    if (betaReleases.length > 0) {
-      return betaReleases[0];
+    // Filter releases by prefix (stable-, beta-, alpha-) or suffix (v*-alpha, v*-beta)
+    const filteredReleases = data.filter(release => {
+      const tag = release.tag_name;
+      // Match prefix format (e.g., stable-2.9.0, beta-2.9.6, alpha-3.0.12)
+      if (tag.startsWith(tagNamePrefix)) {
+        return true;
+      }
+      // Match suffix format for semver (e.g., v3.0.25-alpha)
+      if (tagNamePrefix === 'alpha' && tag.match(/^v\d+\.\d+\.\d+-alpha/)) {
+        return true;
+      }
+      if (tagNamePrefix === 'beta' && tag.match(/^v\d+\.\d+\.\d+-beta/)) {
+        return true;
+      }
+      return false;
+    });
+    
+    if (filteredReleases.length > 0) {
+      return filteredReleases[0];
     }
-  
+      
     throw new Error(`No ${tagNamePrefix} releases found for ${owner}/${repo}`);
   }
 
@@ -97,3 +113,7 @@ updateReleaseInfo("stable", stableReleaseInfoDiv, stableDownloadButton);
 const betaReleaseInfoDiv = document.getElementById("beta-release-info");
 const betaDownloadButton = document.getElementById("beta-download-button");
 updateReleaseInfo("beta", betaReleaseInfoDiv, betaDownloadButton);
+
+const alphaReleaseInfoDiv = document.getElementById("alpha-release-info");
+const alphaDownloadButton = document.getElementById("alpha-download-button");
+updateReleaseInfo("alpha", alphaReleaseInfoDiv, alphaDownloadButton);
