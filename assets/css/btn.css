@@ -63,6 +63,110 @@
    padding: 2px 16px;
  }
 
+ /* Markdown styling within modal body */
+ .my-modal-body h1 {
+   font-size: 2em;
+   font-weight: bold;
+   margin-top: 0.67em;
+   margin-bottom: 0.67em;
+   border-bottom: 1px solid #eaeaea;
+   padding-bottom: 0.3em;
+ }
+
+ .my-modal-body h2 {
+   font-size: 1.5em;
+   font-weight: bold;
+   margin-top: 0.83em;
+   margin-bottom: 0.83em;
+   border-bottom: 1px solid #eaeaea;
+   padding-bottom: 0.3em;
+ }
+
+ .my-modal-body h3 {
+   font-size: 1.17em;
+   font-weight: bold;
+   margin-top: 1em;
+   margin-bottom: 1em;
+ }
+
+ .my-modal-body h4 {
+   font-size: 1em;
+   font-weight: bold;
+   margin-top: 1.33em;
+   margin-bottom: 1.33em;
+ }
+
+ .my-modal-body ul,
+ .my-modal-body ol {
+   margin-top: 0.5em;
+   margin-bottom: 0.5em;
+   padding-left: 2em;
+ }
+
+ .my-modal-body li {
+   margin-top: 0.25em;
+   margin-bottom: 0.25em;
+ }
+
+ .my-modal-body hr {
+   border: 0;
+   border-top: 2px solid #eaeaea;
+   margin-top: 1em;
+   margin-bottom: 1em;
+ }
+
+ .my-modal-body p {
+   margin-top: 0.5em;
+   margin-bottom: 0.5em;
+ }
+
+ .my-modal-body em {
+   font-style: italic;
+ }
+
+ .my-modal-body strong {
+   font-weight: bold;
+ }
+
+ .my-modal-body code {
+   background-color: #f6f8fa;
+   padding: 0.2em 0.4em;
+   border-radius: 3px;
+   font-family: monospace;
+   font-size: 0.9em;
+ }
+
+ .my-modal-body pre {
+   background-color: #f6f8fa;
+   padding: 16px;
+   border-radius: 6px;
+   overflow-x: auto;
+   margin-top: 0.5em;
+   margin-bottom: 0.5em;
+ }
+
+ .my-modal-body pre code {
+   background-color: transparent;
+   padding: 0;
+ }
+
+ .my-modal-body blockquote {
+   border-left: 4px solid #dfe2e5;
+   padding-left: 1em;
+   margin-left: 0;
+   color: #6a737d;
+   font-style: italic;
+ }
+
+ .my-modal-body a {
+   color: #0366d6;
+   text-decoration: none;
+ }
+
+ .my-modal-body a:hover {
+   text-decoration: underline;
+ }
+
  /* Modal Footer */
  .my-modal-footer {
    padding: 2px 16px;
