@@ -38,7 +38,7 @@ Beta releases are released more often and include the newest features but may la
 </div>
 
 ## Latest alpha release
-The SSA 3 alpha is based on a new implementation in settings are incompatible between SSA 2 and SSA 3. In the future, SSA 2 will be deprecated. 
+The SSA 3 alpha is based on a new implementation and settings are incompatible between SSA 2 and SSA 3. In the future, SSA 2 will be deprecated. 
 
 <div id="alpha-download-area">
   <button id="alpha-download-button" class="button" disabled>Download</button>
