@@ -53,5 +53,8 @@ the conflict will be resolved without NLR HFS deletion.
 
 Please point the plugin installer to your MSFS community folder. If you use MSFS 2020 and 2024, redo the process for the other simulator. Alternatively, you can copy the *SSA WASM Bridge* plugin folder manually to the other community folder.
 
+## Q: Is SimConnect required to connect SSA to MSFS?
+**A:** Usually not. However, I got reports that installing legacy SimConnect might solve some issues for some users. You can find a legacy SimConnect installer here: [SimConnect @ LittleNavMap](https://www.littlenavmap.org/downloads/SimConnect/)
+
 ## Q: Does SSA conflict with Vaicom?
 **A:** You can run both simultaneously; however, we’ve received reports suggesting that the SimShaker entries in the export.lua file should be placed below the VAICOM entry. If you experience any issues, try manually moving the SimShaker lines below the VAICOM lines in the file.
