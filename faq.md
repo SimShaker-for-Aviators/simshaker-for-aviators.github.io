@@ -58,3 +58,24 @@ Please point the plugin installer to your MSFS community folder. If you use MSFS
 
 ## Q: Does SSA conflict with Vaicom?
 **A:** You can run both simultaneously; however, we’ve received reports suggesting that the SimShaker entries in the export.lua file should be placed below the VAICOM entry. If you experience any issues, try manually moving the SimShaker lines below the VAICOM lines in the file.
+
+## Q: Where are my logfiles and can I increase the verbosity / log level?
+**A:** The log files are stored in the SimShaker for Aviators folder in your users documents folder, e.g. `C:\Users\YOURUSERSNAME\Documents\SimShaker for Aviators`. SSA keeps some logs but will remove older ones at some time. 
+
+You can increase the log level to get even more details, this might be useful for me for troubleshooting. To do so, open the `NLog.config` located at `C:\Program Files\SimShaker\SimShaker for Aviators Alpha` with an editor of your choice, e.g. Visual Studio Code.
+
+Change the `minlevel` in the rules section from
+```xml
+	<rules>
+		<logger name="*" minlevel="Debug" writeTo="logfile" />
+		<logger name="*" minlevel="Debug" writeTo="rtb_log" />
+	</rules>
+```
+to
+```xml
+	<rules>
+		<logger name="*" minlevel="Trace" writeTo="logfile" />
+		<logger name="*" minlevel="Trace" writeTo="rtb_log" />
+	</rules>
+```
+Please revert back the `minlevel` after your logging sessions. Otherwise, you may encounter performance impacts.
