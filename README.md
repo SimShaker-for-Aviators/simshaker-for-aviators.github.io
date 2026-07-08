@@ -9,6 +9,7 @@ SimShaker for Aviators (SSA) is a software application designed for flight simul
 ## Supported Devices:
   - Gametrix JetSeat 
   - SimShaker JetPad 
+  - SimShaker Pad 
   - Realteus ForceFeel 
   - (Limited)  Next Level Racing HF8 (supported as ForceFeel)
   - 1 to 6 bass-shakers (with the payware Sound Module addon by Andre - [SimShaker Sound Module](https://simshaker.com/software/general/sound/)) 

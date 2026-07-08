@@ -46,6 +46,9 @@ If you comment this line out by adding -- in front of it as below:
 ```
 the conflict will be resolved without NLR HFS deletion. 
 
+## Q: Do I need additional software to use the SimShaker Pad or the HF8Pro?
+**A:** Yes. The SimShaker Pad and the HF8Pro require the dedicated **SimShaker Pad Handler** software to be installed and running alongside SSA. Without it, SSA cannot detect or send tactile data to these devices. You can download it here: [SimShaker Pad Handler Setup](https://simshaker.com/downloads/SimShaker_Pad_Handler_Setup_v1.12.msi).
+
 ## Q: Some effects are missing for 3rd party MSFS planes?
 **A:** Some planes use custom LVARs, to read these LVARs, please install the *MSFS Bridge* plugin by enabling the checkbox in the *Special Options* tab. 
 
