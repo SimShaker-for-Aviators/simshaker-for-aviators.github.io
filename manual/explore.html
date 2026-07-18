@@ -1,0 +1,1445 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSA Manual — Explore the UI</title>
+<meta name="description" content="Interactive mock of the SimShaker for Aviators app — hover or click any control to learn what it does.">
+<style>
+  /* ===================================================================
+     Reset & base
+     =================================================================== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #05070a;
+    color: #e8eef4;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, p { margin: 0; }
+  a { color: #7fd6a4; }
+  button { font-family: inherit; }
+
+  /* Design tokens copied from SimShaker for Aviators/UI/Wpf/Theme.xaml */
+  :root {
+    --window-bg: #0b0f14;
+    --panel-bg: #10151b;
+    --panel-border: #1c242e;
+    --sidebar-bg: #0d1218;
+    --card-bg: #131920;
+    --card-border: #222c37;
+    --inner-bg: #0f141a;
+    --control-bg: #161d26;
+    --control-border: #28323e;
+    --button-bg: #16202b;
+    --button-hover-bg: #1c2836;
+    --row-divider: #1a222c;
+    --track: #232d38;
+    --accent: #41d47f;
+    --accent-dim: #3fa66f;
+    --accent-bg: #1f4630;
+    --accent-border: #2c6a47;
+    --accent-text: #a9ecc6;
+    --amber: #f0b64a;
+    --amber-text: #f0cf8a;
+    --text-primary: #e8eef4;
+    --text-bright: #dbe4ec;
+    --text-secondary: #9fb0c0;
+    --text-muted: #7e8c9a;
+    --text-faint: #5f6f7f;
+    --text-faintest: #48586a;
+    --off-dot: #3a4653;
+    --danger-bg: #2a1518;
+    --danger-border: #5c2b31;
+    --danger-text: #e08a92;
+    --mono: Consolas, "SFMono-Regular", Menlo, monospace;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  /* ===================================================================
+     Top strip
+     =================================================================== */
+  .topstrip {
+    background: var(--window-bg);
+    border-bottom: 1px solid var(--panel-border);
+    padding: 18px clamp(16px, 4vw, 40px);
+  }
+  .topstrip-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .topstrip h1 {
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .topstrip .hint {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 13px;
+    max-width: 640px;
+  }
+  .hint-mobile { display: none; }
+  .back-link {
+    flex: none;
+    color: var(--accent-text);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-bg);
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .back-link:hover { background: #265a3c; }
+
+  /* ===================================================================
+     Layout: mock + explanation panel
+     =================================================================== */
+  .layout {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px clamp(16px, 4vw, 40px) 60px;
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .mock-wrapper {
+    flex: 1 1 820px;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 4px;
+  }
+  .explain-panel {
+    flex: 0 0 300px;
+    max-width: 100%;
+    position: sticky;
+    top: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 18px;
+    min-height: 220px;
+  }
+  .explain-placeholder p {
+    color: var(--text-faint);
+    font-size: 13.5px;
+  }
+  .explain-content h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+  .explain-content p {
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .explain-link {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+  .explain-link:hover { text-decoration: underline; }
+
+  /* ===================================================================
+     Hotspot interaction styling
+     =================================================================== */
+  .hs {
+    cursor: pointer;
+    outline-offset: 2px;
+    border-radius: 6px;
+    transition: outline-color 120ms ease, box-shadow 120ms ease;
+  }
+  .hs:hover, .hs:focus-visible {
+    outline: 2px solid var(--accent);
+  }
+  .hs.hs-active {
+    outline: 2px solid var(--accent);
+    box-shadow: 0 0 0 4px rgba(65, 212, 127, 0.16);
+  }
+  .hs:focus { outline: none; }
+  .hs:focus-visible { outline: 2px solid var(--accent); }
+
+  #hsTooltip {
+    position: fixed;
+    z-index: 500;
+    max-width: 240px;
+    background: var(--card-bg);
+    border: 1px solid var(--accent-border);
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.45);
+    pointer-events: none;
+  }
+  #hsTooltip[hidden] { display: none; }
+
+  /* ===================================================================
+     App window mock
+     =================================================================== */
+  .app-window {
+    width: 100%;
+    min-width: 860px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.55);
+  }
+
+  /* --- Title bar --- */
+  .titlebar {
+    height: 36px;
+    background: var(--window-bg);
+    border-bottom: 1px solid var(--panel-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 14px;
+  }
+  .titlebar-id {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    margin: 2px 0;
+  }
+  .app-icon { font-size: 13px; }
+  .app-title { font-size: 13px; font-weight: 600; color: #c6cfd8; }
+  .app-version { font-family: var(--mono); font-size: 12px; color: #5b6a79; }
+  .preview-badge { font-family: var(--mono); font-size: 11px; color: var(--amber-text); margin-left: 4px; }
+  .titlebar-buttons { display: flex; height: 100%; }
+  .tb-btn {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-faint);
+    font-size: 13px;
+  }
+
+  /* --- Status header --- */
+  .status-header {
+    background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--panel-border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sim-chips { display: flex; gap: 8px; }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #151b22;
+    border: 1px solid var(--track);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #6c7a89;
+  }
+  .chip.on { background: #12241a; border-color: var(--accent-bg); color: #8fe6b4; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--off-dot); flex: none; }
+  .dot.on { background: var(--accent); box-shadow: 0 0 6px rgba(65,212,127,.7); }
+  .dot.missing { background: #e05561; }
+  .device-indicators { display: flex; align-items: center; gap: 14px; }
+  .device-ind { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: #8b98a5; }
+  .device-ind .not-running { color: #e08a92; font-size: 12px; margin-left: 4px; }
+
+  /* --- Sidebar + content --- */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 196px 1fr;
+    min-height: 640px;
+  }
+  .sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--panel-border);
+    padding: 14px 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-item {
+    all: unset;
+    box-sizing: border-box;
+    display: block;
+    padding: 9px 16px;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    border-left: 3px solid transparent;
+    cursor: pointer;
+  }
+  .nav-item:hover { color: #c6cfd8; }
+  .nav-item.active {
+    background: var(--button-bg);
+    border-left-color: var(--accent);
+    padding-left: 13px;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .content {
+    padding: 20px 22px;
+    overflow-y: auto;
+    max-height: 640px;
+  }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===================================================================
+     Shared card / control primitives used across pages
+     =================================================================== */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+  }
+  .card.accent-border { border-color: var(--accent-border); }
+  .card.danger { border-color: var(--danger-border); }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8b98a5;
+    letter-spacing: .2px;
+  }
+  .card-desc {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+  .section-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-faint);
+    letter-spacing: .3px;
+    text-transform: uppercase;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--button-bg);
+    border: 1px solid var(--control-border);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: default;
+  }
+  .btn.small { padding: 5px 12px; font-size: 12.5px; }
+  .btn.primary { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent-text); }
+  .btn.danger { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger-text); }
+
+  .combo {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--control-bg);
+    border: 1px solid var(--control-border);
+    border-radius: 6px;
+    padding: 0 11px;
+    font-size: 13.5px;
+    color: var(--text-bright);
+  }
+  .combo .chev { color: var(--text-faint); font-size: 11px; }
+
+  .switch {
+    display: inline-flex;
+    align-items: center;
+    width: 30px;
+    height: 16px;
+    border-radius: 9px;
+    background: #151b22;
+    border: 1px solid var(--off-dot);
+    padding: 2px;
+    flex: none;
+  }
+  .switch .knob {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--text-faint);
+    margin-left: 0;
+  }
+  .switch.on { background: var(--accent-bg); border-color: var(--accent-border); }
+  .switch.on .knob { background: var(--accent); margin-left: auto; }
+  .switch-row { display: flex; align-items: center; gap: 9px; }
+  .switch-label { font-size: 13px; color: var(--text-secondary); }
+
+  .stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--control-bg);
+    border: 1px solid var(--control-border);
+    border-radius: 5px;
+    padding: 3px 9px;
+  }
+  .stepper .val { font-family: var(--mono); font-size: 13px; color: var(--text-bright); min-width: 20px; text-align: right; }
+  .stepper .arrows { display: flex; flex-direction: column; gap: 0; }
+  .stepper .arrows span { font-size: 8px; color: var(--text-faint); line-height: 1.1; }
+
+  .mini-slider { position: relative; width: 90px; height: 12px; flex: none; }
+  .mini-slider .track { position: absolute; top: 5px; left: 0; right: 0; height: 4px; border-radius: 2px; background: var(--track); }
+  .mini-slider .fill { position: absolute; top: 5px; left: 0; height: 4px; border-radius: 2px; background: var(--accent-dim); }
+  .mini-slider .thumb { position: absolute; top: 1px; width: 12px; height: 12px; border-radius: 50%; background: #cfe8da; box-shadow: 0 1px 3px rgba(0,0,0,.5); }
+
+  .livebar { height: 2px; border-radius: 1px; background: var(--row-divider); margin-top: 3px; position: relative; }
+  .livebar .fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 1px; background: var(--amber); }
+
+  /* ===================================================================
+     Effects page
+     =================================================================== */
+  .pickers-row { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+  .picker-group { display: flex; flex-direction: column; gap: 5px; }
+  .picker-group .combo { width: 160px; }
+  .picker-group.aircraft .combo { width: 240px; }
+  .insim-pill {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #151b22;
+    border: 1px solid var(--track);
+    border-radius: 16px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #7e8c9a;
+  }
+  .insim-pill .sep { width: 1px; height: 12px; background: var(--control-border); }
+  .insim-pill strong { font-family: var(--mono); font-weight: 600; font-size: 12.5px; }
+  .insim-pill.none .dot { background: #e05561; }
+  .insim-pill.none strong { color: #e08a92; }
+  .insim-pill:not(.none) .dot { background: var(--accent); }
+  .insim-pill:not(.none) strong { color: var(--accent); }
+
+  .effects-table { overflow: hidden; }
+  .effects-head {
+    display: grid;
+    grid-template-columns: 24px 1fr 46px 150px 34px 150px 34px;
+    column-gap: 8px;
+    align-items: center;
+    background: var(--inner-bg);
+    border-bottom: 1px solid var(--card-border);
+    padding: 9px 14px;
+  }
+  .effect-row {
+    border-bottom: 1px solid var(--row-divider);
+    padding: 8px 14px;
+  }
+  .effect-row:last-child { border-bottom: none; }
+  .effect-row-main {
+    display: grid;
+    grid-template-columns: 24px 1fr 46px 150px 34px 150px 34px;
+    column-gap: 8px;
+    align-items: center;
+  }
+  .effect-chevron { color: var(--accent); font-family: var(--mono); font-size: 11px; text-align: center; }
+  .effect-chevron.invisible { visibility: hidden; }
+  .effect-name-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .effect-name { font-size: 13.5px; color: var(--text-bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .effect-row.off .effect-name { color: var(--text-faint); }
+  .param-chip {
+    background: #12241a;
+    border: 1px solid var(--accent-bg);
+    color: #8fd0aa;
+    font-size: 11.5px;
+    border-radius: 9px;
+    padding: 2px 9px;
+    flex: none;
+  }
+  .firing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex: none; }
+  .vol-cell { display: flex; flex-direction: column; justify-content: center; }
+  .effect-row.off .vol-cell { opacity: .35; }
+  .vol-value { font-family: var(--mono); font-size: 13px; color: #bcd7c8; text-align: right; }
+
+  .expanded-panel {
+    background: var(--inner-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 8px 0 4px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 26px;
+    align-items: center;
+  }
+  .param-item { display: flex; align-items: center; gap: 9px; }
+  .param-item .p-label { font-size: 13px; color: var(--text-secondary); }
+
+  .turbulence-hint {
+    background: var(--inner-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin: 8px 0 4px 32px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .turbulence-hint .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faintest);
+    background: var(--window-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 3px 7px;
+    margin: 6px 6px 0 0;
+  }
+
+  .effects-footer {
+    background: var(--inner-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+  .vdiv { width: 1px; height: 20px; background: var(--track); }
+
+  /* ===================================================================
+     Connections page
+     =================================================================== */
+  .conn-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .conn-card { padding: 16px 14px; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; }
+  .card-head-left { display: flex; align-items: center; gap: 8px; }
+  .card-head-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .card-status { font-family: var(--mono); font-size: 12px; color: var(--text-faint); }
+  .card-status.on { color: var(--accent); }
+  .dot-glow { box-shadow: 0 0 6px rgba(65,212,127,.7); }
+
+  .debug-panel { margin-top: 16px; }
+  .debug-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-bottom: 1px solid var(--card-border);
+  }
+  .debug-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+  .debug-title .src { color: var(--text-faintest); font-family: var(--mono); font-size: 11.5px; margin-left: 8px; }
+  .debug-body { padding: 12px 14px; font-family: var(--mono); font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; white-space: pre-wrap; }
+  .debug-actions { display: flex; gap: 8px; }
+
+  /* ===================================================================
+     Output Devices page
+     =================================================================== */
+  .device-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .device-card { padding: 18px 16px; }
+  .device-card .card-head { margin-bottom: 12px; }
+  .device-card .row { display: flex; align-items: center; margin-top: 12px; }
+  .device-card .row.between { justify-content: space-between; }
+  .amber-note { font-size: 12.5px; color: var(--amber-text); margin-top: 10px; line-height: 1.55; }
+
+  .massage-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .massage-card { padding: 18px 16px; }
+  .massage-controls { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .massage-controls .spacer { flex: 1; }
+
+  /* ===================================================================
+     Settings page
+     =================================================================== */
+  .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .settings-grid + .settings-grid { margin-top: 12px; }
+  .settings-card { padding: 16px 16px; }
+  .settings-card .row { margin-top: 10px; }
+  .help-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 16px; margin-top: 12px; }
+  .help-links { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .log-panel { margin-top: 12px; }
+  .log-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--card-border); flex-wrap: wrap; gap: 8px; }
+  .log-body { padding: 10px 14px; font-family: var(--mono); font-size: 12px; color: var(--text-secondary); line-height: 1.7; max-height: 120px; overflow: hidden; }
+  .log-line { white-space: pre; }
+  .log-line .lvl-error { color: #e08a92; }
+  .log-line .lvl-info { color: var(--text-faint); }
+
+  /* ===================================================================
+     Mobile accordion (shown instead of the mock below 900px)
+     =================================================================== */
+  .mobile-accordion { display: none; padding: 8px clamp(16px, 4vw, 40px) 60px; max-width: 760px; margin: 0 auto; }
+  .accordion-heading {
+    font-size: 15px;
+    color: var(--accent-text);
+    margin: 26px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .accordion-heading:first-child { margin-top: 6px; }
+  .mobile-accordion details {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+  }
+  .mobile-accordion summary {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .mobile-accordion p {
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .accordion-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+  .accordion-link:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .layout { display: none; }
+    .mobile-accordion { display: block; }
+    .hint-desktop { display: none; }
+    .hint-mobile { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topstrip">
+  <div class="topstrip-inner">
+    <div class="topstrip-titles">
+      <h1>SimShaker for Aviators — Interactive UI Guide</h1>
+      <p class="hint hint-desktop">Hover any highlighted element to preview it; click to pin its full explanation into the panel on the right. Every control below is keyboard-reachable with Tab, and Enter/Space pins it too.</p>
+      <p class="hint hint-mobile">Tap a control below to expand its explanation and jump to the full manual chapter.</p>
+    </div>
+    <a class="back-link" href="/manual/">← Back to manual</a>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- =================================================================
+       The mock application window
+       ================================================================= -->
+  <section class="mock-wrapper" aria-label="Interactive mock of the SimShaker for Aviators application">
+    <div class="app-window">
+
+      <!-- Title bar -->
+      <div class="titlebar">
+        <div class="hs titlebar-id" tabindex="0"
+             data-help-title="Title Bar"
+             data-help-text="The custom title bar replaces the standard Windows chrome. It shows the app name, the installed version, and — in preview builds — a NEW UI PREVIEW badge. Drag it to move the window; the minimize, maximize and close glyphs on the right work like any normal window."
+             data-help-link="/manual/index.html#ui-tour">
+          <span class="app-icon" aria-hidden="true">▲</span>
+          <span class="app-title">SimShaker for Aviators</span>
+          <span class="app-version">v3.0.44</span>
+          <span class="preview-badge">NEW UI PREVIEW</span>
+        </div>
+        <div class="titlebar-buttons" aria-hidden="true">
+          <span class="tb-btn">—</span><span class="tb-btn">▢</span><span class="tb-btn">✕</span>
+        </div>
+      </div>
+
+      <!-- Status header -->
+      <div class="status-header">
+        <div class="sim-chips">
+          <div class="hs chip on" tabindex="0"
+               data-help-title="DCS Status Chip"
+               data-help-text="Turns green once SimShaker receives live telemetry from DCS World's Export.lua script over UDP. SimShaker maintains the Export.lua entry automatically on startup, so this usually goes green within a few seconds of entering a mission."
+               data-help-link="/manual/connections.html#status-chips">
+            <span class="dot on"></span>DCS
+          </div>
+          <div class="hs chip" tabindex="0"
+               data-help-title="X-Plane Status Chip"
+               data-help-text="Turns green once the SSA plugin inside X-Plane is sending UDP telemetry. Enable X-Plane support on the Connections page first — that installs the plugin into your X-Plane installation."
+               data-help-link="/manual/connections.html#status-chips">
+            <span class="dot"></span>X-Plane
+          </div>
+          <div class="hs chip" tabindex="0"
+               data-help-title="MSFS Status Chip"
+               data-help-text="Turns green once SimConnect reports a running flight in Microsoft Flight Simulator or FSX. The connection uses SimConnect automatically; the optional WASM bridge on the Connections page adds extra data such as ground contact points."
+               data-help-link="/manual/connections.html#status-chips">
+            <span class="dot"></span>MSFS
+          </div>
+        </div>
+        <div class="device-indicators">
+          <div class="hs device-ind" tabindex="0"
+               data-help-title="JetSeat Indicator"
+               data-help-text="Green means the seat handler process (JetSeat, ForceFeel, or a custom pad driver) is running and receiving effect data. Red means JetSeat output is enabled but the handler could not be found or started. Gray means JetSeat output is switched off entirely."
+               data-help-link="/manual/devices.html#device-indicators">
+            <span class="dot on"></span>JetSeat
+          </div>
+          <div class="hs device-ind" tabindex="0"
+               data-help-title="Sound Module Indicator"
+               data-help-text="Same three-state logic as the JetSeat indicator: green means the Sound Module process is running, red means it's enabled but not found, gray means Sound Module output is off. Both outputs can be active at once in Simultaneous mode."
+               data-help-link="/manual/devices.html#device-indicators">
+            <span class="dot missing"></span>Sound Module<span class="not-running">not running</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar + content -->
+      <div class="body-grid">
+        <nav class="sidebar">
+          <button type="button" class="hs nav-item active" data-page="effects"
+                  data-help-title="Aircraft Effects Page"
+                  data-help-text="Opens the Aircraft Effects page — pick a simulator and aircraft profile, then enable, disable and tune every effect SimShaker can generate for that airframe."
+                  data-help-link="/manual/effects.html#effect-table">
+            Aircraft Effects
+          </button>
+          <button type="button" class="hs nav-item" data-page="connections"
+                  data-help-title="Connections Page"
+                  data-help-text="Opens the Connections page — install and repair the per-simulator bridges (DCS export script, X-Plane plugin, MSFS WASM module) and inspect the live telemetry feed for troubleshooting."
+                  data-help-link="/manual/connections.html#dcs">
+            Connections
+          </button>
+          <button type="button" class="hs nav-item" data-page="devices"
+                  data-help-title="Output Devices Page"
+                  data-help-text="Opens the Output Devices page — choose whether effects go to the JetSeat, the Sound Module, or both at once, pick the seat handler, and trigger massage mode."
+                  data-help-link="/manual/devices.html#jetseat">
+            Output Devices
+          </button>
+          <button type="button" class="hs nav-item" data-page="settings"
+                  data-help-title="Settings Page"
+                  data-help-text="Opens the Settings page — update checks, folder shortcuts, the SSA Tester launcher, performance limits, backup/restore, database reset and the live application log."
+                  data-help-link="/manual/settings.html#updates">
+            Settings
+          </button>
+        </nav>
+
+        <div class="content">
+
+          <!-- ===========================================================
+               Page: Aircraft Effects
+               =========================================================== -->
+          <section id="page-effects" class="page active">
+
+            <div class="pickers-row">
+              <div class="picker-group">
+                <span class="section-label">Simulator</span>
+                <div class="hs combo" tabindex="0"
+                     data-help-title="Simulator Picker"
+                     data-help-text="Selects which simulator's profile set you're editing. The currently running sim is marked with a green dot and bold text; use the Reload button next to it to re-scan for a newly detected aircraft."
+                     data-help-link="/manual/effects.html#simulator-aircraft">
+                  <span>DCS World</span><span class="chev">▾</span>
+                </div>
+              </div>
+              <div class="picker-group aircraft">
+                <span class="section-label">Aircraft</span>
+                <div class="hs combo" tabindex="0"
+                     data-help-title="Aircraft Picker"
+                     data-help-text="Selects the aircraft model whose effect profile is shown below. The aircraft actually detected in the sim is marked the same way as the simulator picker, and a generic/fallback profile is used when no aircraft-specific one exists."
+                     data-help-link="/manual/effects.html#simulator-aircraft">
+                  <span>F/A-18C Hornet</span><span class="chev">▾</span>
+                </div>
+              </div>
+              <div class="btn">↻ Reload</div>
+              <div class="hs insim-pill" tabindex="0"
+                   data-help-title="In-Sim Aircraft Pill"
+                   data-help-text="Shows what SimShaker actually sees from the running simulator right now: the live aircraft and its detected type. It turns red and shows 'none' whenever nothing is currently flying, independent of whatever profile you have selected above."
+                   data-help-link="/manual/index.html#first-run">
+                <span class="dot"></span>In sim <strong>F/A-18C Hornet</strong>
+                <span class="sep"></span>Type <strong>FixedWing</strong>
+              </div>
+            </div>
+
+            <div class="card effects-table">
+              <div class="effects-head">
+                <span></span>
+                <span class="section-label">Effect</span>
+                <span class="section-label" style="text-align:center;">On</span>
+                <span class="section-label" style="grid-column: span 2; text-align:center;">JetSeat</span>
+                <span class="section-label" style="grid-column: span 2; text-align:center;">Sound Module</span>
+              </div>
+
+              <!-- Row 1: simple effect, no params -->
+              <div class="effect-row">
+                <div class="effect-row-main">
+                  <span class="effect-chevron invisible">▸</span>
+                  <div class="effect-name-wrap">
+                    <span class="hs effect-name" tabindex="0"
+                          data-help-title="Effect Row: Runway Rumble"
+                          data-help-text="Each row is one effect SimShaker can generate — for example runway rumble, engine vibration, or a touchdown bump. The full list of effect names and what each represents is documented in the effect glossary."
+                          data-help-link="/manual/effects.html#effect-glossary">Runway Rumble</span>
+                  </div>
+                  <span class="hs" tabindex="0"
+                        data-help-title="Effect On/Off Switch"
+                        data-help-text="Enables or disables this effect for the selected aircraft profile. A disabled effect is skipped entirely by the effect engine, and its volume sliders dim to show they currently have no output."
+                        data-help-link="/manual/effects.html#effect-table">
+                    <span class="switch on"><span class="knob"></span></span>
+                  </span>
+                  <div class="hs vol-cell" tabindex="0"
+                       data-help-title="JetSeat Volume Slider"
+                       data-help-text="Sets how strongly this effect drives the JetSeat, from 0 to 100. The thin amber bar underneath is a live meter — it lights up in real time whenever the effect actually fires while you fly."
+                       data-help-link="/manual/effects.html#effect-table">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:70%;"></div><div class="thumb" style="left:66px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:0%;"></div></div>
+                  </div>
+                  <span class="vol-value">70</span>
+                  <div class="hs vol-cell" tabindex="0"
+                       data-help-title="Sound Module Volume Slider"
+                       data-help-text="Sets how strongly this effect drives the Sound Module, from 0 to 100, independent of the JetSeat volume. Both sliders can be tuned differently so an effect can, for example, rumble the seat gently but sound loud."
+                       data-help-link="/manual/effects.html#effect-table">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:40%;"></div><div class="thumb" style="left:36px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:0%;"></div></div>
+                  </div>
+                  <span class="vol-value">40</span>
+                </div>
+              </div>
+
+              <!-- Row 2: expanded row with slider / stepper / toggle params -->
+              <div class="effect-row">
+                <div class="effect-row-main">
+                  <span class="hs effect-chevron" tabindex="0"
+                        data-help-title="Expand Chevron"
+                        data-help-text="Effects with tunable behavior show a ▸ chevron and a summary chip (like '3 params'). Click either to expand an inline panel with that effect's specific parameters — no separate editor window needed."
+                        data-help-link="/manual/effects.html#parameters">▾</span>
+                  <div class="effect-name-wrap">
+                    <span class="effect-name">Engine Vibrations</span>
+                    <span class="param-chip">3 params</span>
+                  </div>
+                  <span class="switch on"><span class="knob"></span></span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:55%;"></div><div class="thumb" style="left:52px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:30%;"></div></div>
+                  </div>
+                  <span class="vol-value">55</span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:30%;"></div><div class="thumb" style="left:28px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:30%;"></div></div>
+                  </div>
+                  <span class="vol-value">30</span>
+                </div>
+
+                <div class="expanded-panel">
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Slider Parameter"
+                       data-help-text="A continuous parameter with its own draggable slider and live numeric readout, independent of the JetSeat/Sound Module volume sliders — used for things like frequency or ramp time."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="p-label">Frequency</span>
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:55%;"></div><div class="thumb" style="left:52px;"></div></div>
+                    <span class="vol-value">55</span>
+                  </div>
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Stepper Parameter"
+                       data-help-text="An integer parameter (e.g. a repeat count or an RPM threshold) adjusted with the ▲▼ arrows. The current value is shown in the small mono readout between them."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="p-label">Idle RPM threshold</span>
+                    <div class="stepper"><span class="val">18</span><span class="arrows"><span>▲</span><span>▼</span></span></div>
+                  </div>
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Toggle Parameter"
+                       data-help-text="A simple on/off switch for a boolean behavior of the effect, such as whether it fades in smoothly instead of triggering instantly."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="switch on"><span class="knob"></span></span>
+                    <span class="p-label">Smooth ramp</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 3: firing indicator -->
+              <div class="effect-row">
+                <div class="effect-row-main">
+                  <span class="effect-chevron invisible">▸</span>
+                  <div class="effect-name-wrap">
+                    <span class="effect-name">Touchdown</span>
+                    <span class="firing-dot" title="Currently firing"></span>
+                  </div>
+                  <span class="switch on"><span class="knob"></span></span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:90%;"></div><div class="thumb" style="left:84px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:80%;"></div></div>
+                  </div>
+                  <span class="vol-value">90</span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:60%;"></div><div class="thumb" style="left:56px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:80%;"></div></div>
+                  </div>
+                  <span class="vol-value">60</span>
+                </div>
+              </div>
+
+              <!-- Row 4: disabled effect -->
+              <div class="effect-row off">
+                <div class="effect-row-main">
+                  <span class="effect-chevron invisible">▸</span>
+                  <div class="effect-name-wrap"><span class="effect-name">Speed Brakes</span></div>
+                  <span class="switch"><span class="knob"></span></span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:50%;"></div><div class="thumb" style="left:47px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:0%;"></div></div>
+                  </div>
+                  <span class="vol-value">50</span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:20%;"></div><div class="thumb" style="left:19px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:0%;"></div></div>
+                  </div>
+                  <span class="vol-value">20</span>
+                </div>
+              </div>
+
+              <!-- Row 5: turbulence, with a compact configurator hint -->
+              <div class="effect-row">
+                <div class="effect-row-main">
+                  <span class="effect-chevron" style="color:var(--accent);">▾</span>
+                  <div class="effect-name-wrap">
+                    <span class="effect-name">Turbulence</span>
+                    <span class="param-chip">configurator</span>
+                  </div>
+                  <span class="switch on"><span class="knob"></span></span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:45%;"></div><div class="thumb" style="left:42px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:15%;"></div></div>
+                  </div>
+                  <span class="vol-value">45</span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:20%;"></div><div class="thumb" style="left:19px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:15%;"></div></div>
+                  </div>
+                  <span class="vol-value">20</span>
+                </div>
+                <div class="hs turbulence-hint" tabindex="0"
+                     data-help-title="Turbulence Configurator"
+                     data-help-text="Turbulence has its own inline configurator instead of plain parameters: a live graph of the incoming wind delta, a filter-function curve that shapes it, and the resulting effect strength — all three update live while you fly, plus a filter-function picker and a reset-to-defaults button."
+                     data-help-link="/manual/effects.html#turbulence">
+                  Replaces the plain parameter list with a live wind-input graph, a filter-function preview and the resulting effect strength — all sampled from live telemetry while flying.
+                  <div><span class="tag">Δ V_Wind graph</span><span class="tag">filter curve</span><span class="tag">resulting strength</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="effects-footer">
+              <div class="hs btn small" tabindex="0"
+                   data-help-title="Copy Settings"
+                   data-help-text="Save profile writes every change on this page to the settings database on disk. Reset discards unsaved changes and reverts every effect back to the last saved values. Copy settings opens a dialog to copy this aircraft's whole effect configuration onto another aircraft or simulator profile."
+                   data-help-link="/manual/effects.html#copy-reset">Copy settings</div>
+              <div class="vdiv"></div>
+              <div class="hs btn small" tabindex="0"
+                   data-help-title="Reset"
+                   data-help-text="Reset discards unsaved changes on this page and reverts every effect back to the values that were last saved to disk for this aircraft profile."
+                   data-help-link="/manual/effects.html#copy-reset">Reset</div>
+              <div class="hs btn primary" tabindex="0"
+                   data-help-title="Save Profile"
+                   data-help-text="Writes every change on this page — enabled effects, volumes and parameters — to the settings database on disk, so it survives an app restart and is available to Copy settings for other profiles."
+                   data-help-link="/manual/effects.html#copy-reset">Save profile</div>
+            </div>
+          </section>
+
+          <!-- ===========================================================
+               Page: Connections
+               =========================================================== -->
+          <section id="page-connections" class="page">
+
+            <div class="conn-cards">
+              <div class="hs card accent-border conn-card" tabindex="0"
+                   data-help-title="DCS Card"
+                   data-help-text="Shows whether DCS World is currently sending telemetry, and lets you repair the Export.lua entry if DCS updates or a mod overwrites it. SimShaker normally maintains this file automatically on startup, so Repair export… is mainly a manual fallback."
+                   data-help-link="/manual/connections.html#dcs">
+                <div class="card-head">
+                  <div class="card-head-left"><span class="dot on dot-glow"></span><span class="card-head-name">DCS</span></div>
+                  <span class="card-status on">CONNECTED</span>
+                </div>
+                <p class="card-desc">Export script installed · receiving data</p>
+                <div class="row" style="margin-top:10px;"><div class="btn small">Repair export…</div></div>
+              </div>
+
+              <div class="hs card conn-card" tabindex="0"
+                   data-help-title="X-Plane Card"
+                   data-help-text="Toggling Support enabled prompts you to locate X-Plane.exe and installs the SSA plugin into that X-Plane installation. Turning it off removes the saved installation path; X-Plane needs a restart to pick up plugin changes."
+                   data-help-link="/manual/connections.html#xplane">
+                <div class="card-head">
+                  <div class="card-head-left"><span class="dot"></span><span class="card-head-name">X-Plane</span></div>
+                  <span class="card-status">IDLE</span>
+                </div>
+                <div class="row switch-row" style="margin-top:10px;"><span class="switch on"><span class="knob"></span></span><span class="switch-label">Support enabled</span></div>
+                <p class="card-desc">Installs the SSA plugin into your X-Plane installation</p>
+              </div>
+
+              <div class="hs card conn-card" tabindex="0"
+                   data-help-title="MSFS Card"
+                   data-help-text="SimConnect telemetry is used automatically whenever MSFS or FSX is detected — no toggle needed for that. The WASM bridge is optional extra data; enabling it installs a module into your MSFS Community folder, which needs a restart to pick it up."
+                   data-help-link="/manual/connections.html#msfs">
+                <div class="card-head">
+                  <div class="card-head-left"><span class="dot"></span><span class="card-head-name">MSFS</span></div>
+                  <span class="card-status">IDLE</span>
+                </div>
+                <div class="row switch-row" style="margin-top:10px;"><span class="switch"><span class="knob"></span></span><span class="switch-label">WASM bridge</span></div>
+                <p class="card-desc">SimConnect is used automatically; the WASM bridge adds extra data</p>
+              </div>
+            </div>
+
+            <div class="hs card debug-panel" tabindex="0"
+                 data-help-title="Live Telemetry / Debug Panel"
+                 data-help-text="A live, read-only snapshot of whatever the currently connected simulator is sending — useful for troubleshooting missing effects. It auto-detects which sim is active, can be paused to freeze a snapshot, copied to the clipboard for a bug report, or popped out into its own window."
+                 data-help-link="/manual/connections.html#troubleshooting">
+              <div class="debug-head">
+                <span class="debug-title">DCS <span class="src">UDP 29005 · Export.lua</span></span>
+                <div class="debug-actions">
+                  <div class="btn small">⏸ Pause</div>
+                  <div class="btn small">Copy</div>
+                  <div class="btn small">Pop out ⧉</div>
+                </div>
+              </div>
+              <div class="debug-body">Altitude: 4520 ft&#10;IAS: 238 kts&#10;AoA: 4.1°&#10;G-Load: 1.2&#10;Gear: up · Flaps: 0%&#10;Engine RPM: 91% / 91%</div>
+            </div>
+          </section>
+
+          <!-- ===========================================================
+               Page: Output Devices
+               =========================================================== -->
+          <section id="page-devices" class="page">
+
+            <div class="device-cards">
+              <div class="card accent-border device-card">
+                <div class="hs card-head" tabindex="0"
+                     data-help-title="JetSeat Card"
+                     data-help-text="Shows whether JetSeat output is currently active and, once enabled, whether the seat handler process is actually running. The seat handler is the small background process that turns SimShaker's effect data into motor commands for the seat pad."
+                     data-help-link="/manual/devices.html#jetseat">
+                  <div class="card-head-left"><span class="dot on dot-glow"></span><span class="card-head-name">JetSeat — USB</span></div>
+                  <span class="card-status on">ACTIVE</span>
+                </div>
+                <div class="hs row switch-row" tabindex="0"
+                     data-help-title="Output to JetSeat Toggle"
+                     data-help-text="Turns JetSeat output on or off. At least one output device must stay enabled — turning off both JetSeat and Sound Module at once is blocked. Enabling both together switches SimShaker into Simultaneous output mode."
+                     data-help-link="/manual/devices.html#jetseat">
+                  <span class="switch on"><span class="knob"></span></span><span class="switch-label">Output to JetSeat</span>
+                </div>
+                <div class="hs row between" tabindex="0"
+                     data-help-title="Seat Handler Controls"
+                     data-help-text="Chooses which seat handler drives the pad: the built-in JetSeat or ForceFeel drivers, or any custom 'SimShaker Pad' handler shortcut found in your documents folder. Restart relaunches the selected handler process; Test motors plays a short pattern on every motor to verify wiring."
+                     data-help-link="/manual/devices.html#jetseat">
+                  <span class="switch-label">Handler</span>
+                  <div class="combo" style="width:170px;"><span>JetSeat</span><span class="chev">▾</span></div>
+                </div>
+                <div class="row" style="gap:8px;">
+                  <div class="btn small">Restart</div>
+                  <div class="btn small">Test motors</div>
+                </div>
+              </div>
+
+              <div class="card device-card">
+                <div class="hs card-head" tabindex="0"
+                     data-help-title="Sound Module Card"
+                     data-help-text="Shows whether Sound Module output is active and whether an installed Sound Module application was found at all — if none is found, the card explains where to download it and the toggle stays disabled."
+                     data-help-link="/manual/devices.html#sound-module">
+                  <div class="card-head-left"><span class="dot"></span><span class="card-head-name">Sound Module</span></div>
+                  <span class="card-status">OFF</span>
+                </div>
+                <div class="hs row switch-row" tabindex="0"
+                     data-help-title="Output to Sound Module Toggle"
+                     data-help-text="Turns Sound Module output on or off, subject to the same 'at least one device enabled' rule as JetSeat. It's only enabled once a Sound Module installation has actually been detected on this PC."
+                     data-help-link="/manual/devices.html#sound-module">
+                  <span class="switch"><span class="knob"></span></span><span class="switch-label">Output to Sound Module</span>
+                </div>
+                <div class="hs row between" tabindex="0"
+                     data-help-title="Sound Module Picker"
+                     data-help-text="Selects which installed Sound Module shortcut to launch, when more than one is found on this PC (for example a Start Menu shortcut and a ClickOnce install)."
+                     data-help-link="/manual/devices.html#sound-module">
+                  <span class="switch-label">Module</span>
+                  <div class="combo" style="width:170px; opacity:.5;"><span>—</span><span class="chev">▾</span></div>
+                </div>
+                <div class="row"><div class="btn small" style="opacity:.5;">Restart</div></div>
+                <p class="amber-note">No Sound Module installation found — install the latest Sound Module application.</p>
+              </div>
+            </div>
+
+            <div class="massage-row">
+              <div class="hs card massage-card" tabindex="0"
+                   data-help-title="Massage Mode Card"
+                   data-help-text="Runs a fixed test pattern across the seat's motors — handy for demonstrating the seat or checking every motor responds. Repetitions controls how many cycles ▶ Start plays before stopping automatically; ■ Stop cancels it immediately."
+                   data-help-link="/manual/devices.html#massage-mode">
+                <span class="card-title">Massage mode</span>
+                <div class="massage-controls">
+                  <div class="btn primary small">▶ Start</div>
+                  <div class="btn small">■ Stop</div>
+                  <span class="spacer"></span>
+                  <span class="switch-label">Repetitions</span>
+                  <div class="stepper"><span class="val">3</span><span class="arrows"><span>▲</span><span>▼</span></span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===========================================================
+               Page: Settings
+               =========================================================== -->
+          <section id="page-settings" class="page">
+
+            <div class="settings-grid">
+              <div class="hs card settings-card" tabindex="0"
+                   data-help-title="Updates Card"
+                   data-help-text="Controls whether SimShaker checks GitHub for a newer release every time it starts, and shows the currently installed version underneath."
+                   data-help-link="/manual/settings.html#updates">
+                <span class="card-title">Updates</span>
+                <div class="row switch-row"><span class="switch on"><span class="knob"></span></span><span class="switch-label">Check for updates on startup</span></div>
+                <p class="card-desc">SimShaker for Aviators · Version 3.0.44</p>
+              </div>
+
+              <div class="hs card settings-card" tabindex="0"
+                   data-help-title="Folders Card"
+                   data-help-text="One-click shortcuts to open the SSA install folder, the SSA config/profile folder, and the DCS Export scripts folder (auto-detected under Saved Games) in Windows Explorer."
+                   data-help-link="/manual/settings.html#folders">
+                <span class="card-title">Folders</span>
+                <div class="row" style="gap:8px; flex-wrap:wrap;">
+                  <div class="btn small">SSA Install Folder</div>
+                  <div class="btn small">SSA Config Folder</div>
+                  <div class="btn small">DCS Export Folder</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-grid">
+              <div class="hs card settings-card" tabindex="0"
+                   data-help-title="Performance Card"
+                   data-help-text="Limits how often incoming simulator telemetry is processed — None applies every update, 100 ms or 250 ms throttle it, trading a little effect responsiveness for lower CPU load on slower systems."
+                   data-help-link="/manual/settings.html#performance">
+                <span class="card-title">Performance</span>
+                <div class="row between" style="display:flex; justify-content:space-between; align-items:center;">
+                  <span class="switch-label">Frame rate limiter</span>
+                  <div class="combo" style="width:120px;"><span>None</span><span class="chev">▾</span></div>
+                </div>
+                <p class="card-desc">Limits how often incoming telemetry is processed — reduces CPU load on slower systems.</p>
+              </div>
+
+              <div class="hs card settings-card" tabindex="0"
+                   data-help-title="SSA Tester Card"
+                   data-help-text="Launches the standalone SSA Tester tool, which can record real simulator telemetry to a file and replay it later — useful for testing effects and profiles without needing the aircraft or simulator running."
+                   data-help-link="/manual/settings.html#tester">
+                <div class="row between" style="display:flex; justify-content:space-between; align-items:center; margin-top:0;">
+                  <span class="card-title">SSA Tester</span>
+                  <div class="btn small">↗ Launch SSA Tester</div>
+                </div>
+                <p class="card-desc">Standalone tool to record and replay simulation telemetry.</p>
+              </div>
+            </div>
+
+            <div class="settings-grid">
+              <div class="hs card settings-card" tabindex="0"
+                   data-help-title="Backup &amp; Restore Card"
+                   data-help-text="Export writes every profile and setting to a single XML file; Import loads one back, accepting both the current XML format and the legacy v2 binary format from older SimShaker versions."
+                   data-help-link="/manual/settings.html#backup-restore">
+                <div class="row between" style="display:flex; justify-content:space-between; align-items:center; margin-top:0;">
+                  <span class="card-title">Backup &amp; Restore</span>
+                  <div class="row" style="gap:8px; margin-top:0;">
+                    <div class="btn small">Import…</div>
+                    <div class="btn small">Export…</div>
+                  </div>
+                </div>
+                <p class="card-desc">Import or export all profiles and settings as a file.</p>
+              </div>
+
+              <div class="hs card danger settings-card" tabindex="0"
+                   data-help-title="Danger Zone Card"
+                   data-help-text="Resets the entire settings database — every profile, every effect tweak, every setting — back to factory defaults. This cannot be undone, and a confirmation dialog is shown before anything is erased."
+                   data-help-link="/manual/settings.html#danger-zone">
+                <div class="row between" style="display:flex; justify-content:space-between; align-items:center; margin-top:0;">
+                  <span class="card-title" style="color:#c98a90;">Danger Zone</span>
+                  <div class="btn danger small">Reset Settings Database…</div>
+                </div>
+                <p class="card-desc">Resets all profiles and settings to factory defaults. Cannot be undone.</p>
+              </div>
+            </div>
+
+            <div class="hs card help-row" tabindex="0"
+                 data-help-title="Help &amp; Community Card"
+                 data-help-text="Quick links to the changelog, FAQ, project website, Discord server and a way to support development by email — SimShaker for Aviators is free software maintained in the developers' spare time."
+                 data-help-link="/manual/settings.html#help-community">
+              <div>
+                <span class="card-title">Help &amp; community</span>
+                <p class="card-desc">SimShaker for Aviators is free — support keeps development going.</p>
+              </div>
+              <div class="help-links">
+                <div class="btn small">Changelog</div>
+                <div class="btn small">↗ FAQ</div>
+                <div class="btn small">↗ Website</div>
+                <div class="btn small">↗ Discord</div>
+                <div class="btn small">↗ Support the project</div>
+                <div class="btn small">About</div>
+              </div>
+            </div>
+
+            <div class="hs card log-panel" tabindex="0"
+                 data-help-title="Log Panel"
+                 data-help-text="A live view of the application's internal log. Verbose logging (off by default, since it costs performance) also shows debug-level messages; the log can be paused, cleared, copied to the clipboard for bug reports, or popped out into its own window."
+                 data-help-link="/manual/settings.html#log">
+              <div class="log-head">
+                <span class="debug-title">Application log</span>
+                <div class="debug-actions">
+                  <div class="switch-row"><span class="switch"><span class="knob"></span></span><span class="switch-label" style="font-size:12px;">Verbose</span></div>
+                  <div class="btn small">⏸ Pause</div>
+                  <div class="btn small">Copy</div>
+                  <div class="btn small">Pop out ⧉</div>
+                </div>
+              </div>
+              <div class="log-body">
+                <div class="log-line"><span class="lvl-info">18:42:11.204  INFO   Settings database loaded</span></div>
+                <div class="log-line"><span class="lvl-info">18:42:12.981  INFO   DCS Export.lua verified</span></div>
+                <div class="log-line"><span class="lvl-error">18:44:03.552  ERROR  Sound Module process not found</span></div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       Explanation side panel
+       ================================================================= -->
+  <aside class="explain-panel" aria-live="polite">
+    <div class="explain-placeholder" id="explainPlaceholder">
+      <p>Click any highlighted control to see what it does.</p>
+    </div>
+    <div class="explain-content" id="explainContent" hidden>
+      <h2 id="explainTitle"></h2>
+      <p id="explainText"></p>
+      <a id="explainLink" class="explain-link" href="#">Read more in the manual →</a>
+    </div>
+  </aside>
+</main>
+
+<!-- Floating hover tooltip, positioned by JS -->
+<div id="hsTooltip" role="tooltip" hidden></div>
+
+<!-- =====================================================================
+     Mobile fallback: an accordion generated from the same .hs elements,
+     grouped by mock page. Always built (not only under 900px) so it also
+     works if the viewport is resized after load; visibility is CSS-only.
+     ===================================================================== -->
+<section class="mobile-accordion" id="mobileAccordion" aria-label="UI guide (mobile)"></section>
+
+<script>
+(function () {
+  'use strict';
+
+  var doc = document;
+  var tooltip = doc.getElementById('hsTooltip');
+  var explainPlaceholder = doc.getElementById('explainPlaceholder');
+  var explainContent = doc.getElementById('explainContent');
+  var explainTitle = doc.getElementById('explainTitle');
+  var explainText = doc.getElementById('explainText');
+  var explainLink = doc.getElementById('explainLink');
+  var activeHotspot = null;
+  var validPages = ['effects', 'connections', 'devices', 'settings'];
+
+  /** Walks up from an event target to the nearest ancestor (or self) carrying the .hs class. */
+  function closestHotspot(el) {
+    while (el && el !== doc.body && el.nodeType === 1) {
+      if (el.classList.contains('hs')) { return el; }
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  /** Shows the floating tooltip with the hotspot's title, near the given viewport coordinates. */
+  function showTooltip(hotspot, clientX, clientY) {
+    var title = hotspot.getAttribute('data-help-title');
+    if (!title) { return; }
+    tooltip.textContent = title;
+    tooltip.hidden = false;
+
+    var x = clientX, y = clientY;
+    if (typeof x !== 'number' || typeof y !== 'number') {
+      var rect = hotspot.getBoundingClientRect();
+      x = rect.left;
+      y = rect.bottom + 6;
+    }
+    positionTooltip(x, y);
+  }
+
+  function positionTooltip(x, y) {
+    var pad = 14;
+    var left = x + pad;
+    var top = y + pad;
+    var maxLeft = doc.documentElement.clientWidth - tooltip.offsetWidth - 8;
+    var maxTop = doc.documentElement.clientHeight - tooltip.offsetHeight - 8;
+    if (left > maxLeft) { left = maxLeft; }
+    if (top > maxTop) { top = maxTop; }
+    if (left < 8) { left = 8; }
+    if (top < 8) { top = 8; }
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+  }
+
+  function hideTooltip() {
+    tooltip.hidden = true;
+  }
+
+  /** Pins a hotspot's explanation into the side panel and marks it visually active. */
+  function pinHotspot(hotspot) {
+    if (activeHotspot) { activeHotspot.classList.remove('hs-active'); }
+    activeHotspot = hotspot;
+    hotspot.classList.add('hs-active');
+
+    explainTitle.textContent = hotspot.getAttribute('data-help-title') || '';
+    explainText.textContent = hotspot.getAttribute('data-help-text') || '';
+    explainLink.setAttribute('href', hotspot.getAttribute('data-help-link') || '#');
+
+    explainPlaceholder.hidden = true;
+    explainContent.hidden = false;
+  }
+
+  /** Shows one mock page section and highlights the matching sidebar nav item; updates the hash. */
+  function switchPage(pageKey) {
+    if (validPages.indexOf(pageKey) === -1) { return; }
+
+    var pages = doc.querySelectorAll('.page');
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].classList.toggle('active', pages[i].id === 'page-' + pageKey);
+    }
+
+    var navItems = doc.querySelectorAll('.nav-item');
+    for (var j = 0; j < navItems.length; j++) {
+      navItems[j].classList.toggle('active', navItems[j].getAttribute('data-page') === pageKey);
+    }
+
+    if (window.location.hash !== '#' + pageKey) {
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', '#' + pageKey);
+      } else {
+        window.location.hash = pageKey;
+      }
+    }
+  }
+
+  // --- Hover: outline is pure CSS (:hover / :focus-visible); JS only drives the tooltip. ---
+  doc.addEventListener('mouseover', function (e) {
+    var hotspot = closestHotspot(e.target);
+    if (hotspot) { showTooltip(hotspot, e.clientX, e.clientY); }
+  });
+
+  doc.addEventListener('mousemove', function (e) {
+    if (!tooltip.hidden) { positionTooltip(e.clientX, e.clientY); }
+  });
+
+  doc.addEventListener('mouseout', function (e) {
+    var hotspot = closestHotspot(e.target);
+    if (hotspot && (!e.relatedTarget || !hotspot.contains(e.relatedTarget))) { hideTooltip(); }
+  });
+
+  // --- Keyboard focus: same tooltip, positioned under the element. ---
+  doc.addEventListener('focusin', function (e) {
+    var hotspot = closestHotspot(e.target);
+    if (hotspot) { showTooltip(hotspot); }
+  });
+
+  doc.addEventListener('focusout', function () {
+    hideTooltip();
+  });
+
+  // --- Click: pin the explanation (and switch page for sidebar nav items). ---
+  doc.addEventListener('click', function (e) {
+    var hotspot = closestHotspot(e.target);
+    if (!hotspot) { return; }
+    pinHotspot(hotspot);
+    var pageKey = hotspot.getAttribute('data-page');
+    if (pageKey) { switchPage(pageKey); }
+  });
+
+  // --- Keyboard activation for non-button hotspots (buttons already fire click on Enter/Space). ---
+  doc.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') { return; }
+    var hotspot = closestHotspot(doc.activeElement);
+    if (!hotspot || hotspot.tagName === 'BUTTON') { return; }
+    e.preventDefault();
+    hotspot.click();
+  });
+
+  // --- Initial page selection from the URL hash, default to Aircraft Effects. ---
+  var initialKey = (window.location.hash || '').replace('#', '');
+  switchPage(validPages.indexOf(initialKey) !== -1 ? initialKey : 'effects');
+
+  window.addEventListener('hashchange', function () {
+    var key = (window.location.hash || '').replace('#', '');
+    if (validPages.indexOf(key) !== -1) { switchPage(key); }
+  });
+
+  // =======================================================================
+  // Mobile accordion: built once from the same .hs elements' data
+  // attributes, grouped by mock section. CSS (not JS) decides whether the
+  // desktop mock or this accordion is visible, so it stays correct if the
+  // viewport is resized after load.
+  // =======================================================================
+  function buildMobileAccordion() {
+    var container = doc.getElementById('mobileAccordion');
+    var groups = [
+      { label: 'App Shell', selectors: ['.titlebar', '.status-header', '.sidebar'] },
+      { label: 'Aircraft Effects', selectors: ['#page-effects'] },
+      { label: 'Connections', selectors: ['#page-connections'] },
+      { label: 'Output Devices', selectors: ['#page-devices'] },
+      { label: 'Settings', selectors: ['#page-settings'] }
+    ];
+
+    groups.forEach(function (group) {
+      var hotspots = [];
+      group.selectors.forEach(function (selector) {
+        var scope = doc.querySelector(selector);
+        if (!scope) { return; }
+        var found = scope.querySelectorAll('.hs');
+        for (var i = 0; i < found.length; i++) { hotspots.push(found[i]); }
+      });
+      if (hotspots.length === 0) { return; }
+
+      var heading = doc.createElement('h2');
+      heading.className = 'accordion-heading';
+      heading.textContent = group.label;
+      container.appendChild(heading);
+
+      hotspots.forEach(function (hotspot) {
+        var details = doc.createElement('details');
+
+        var summary = doc.createElement('summary');
+        summary.textContent = hotspot.getAttribute('data-help-title') || '';
+        details.appendChild(summary);
+
+        var text = doc.createElement('p');
+        text.textContent = hotspot.getAttribute('data-help-text') || '';
+        details.appendChild(text);
+
+        var link = doc.createElement('a');
+        link.className = 'accordion-link';
+        link.setAttribute('href', hotspot.getAttribute('data-help-link') || '#');
+        link.textContent = 'Read more in the manual →';
+        details.appendChild(link);
+
+        container.appendChild(details);
+      });
+    });
+  }
+
+  buildMobileAccordion();
+})();
+</script>
+</body>
+</html>

@@ -25,6 +25,21 @@ round-avatar: false
 # then specify the following parameter
 #title-img: /path/to/image
 
+###################
+# --- Navbar ---  #
+###################
+
+navbar-links:
+  Manual:
+    - Overview: "manual/index.html"
+    - Aircraft Effects: "manual/effects.html"
+    - Connections: "manual/connections.html"
+    - Output Devices: "manual/devices.html"
+    - Settings: "manual/settings.html"
+    - Explore the UI: "manual/explore.html"
+  FAQ: "faq.html"
+  Tester: "tester.html"
+
 #####################################
 # --- Footer social media links --- #
 #####################################

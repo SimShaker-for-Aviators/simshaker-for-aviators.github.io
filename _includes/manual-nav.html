@@ -1,0 +1,38 @@
+<!-- Chapter navigation strip for the SSA manual. Included via each chapter's
+     `before-content: manual-nav.html` front matter (beautiful-jekyll hook). -->
+<nav class="manual-nav">
+  <a href="/manual/index.html"{% if page.url == "/manual/index.html" or page.url == "/manual/" %} class="is-active"{% endif %}>Overview</a>
+  <a href="/manual/effects.html"{% if page.url == "/manual/effects.html" %} class="is-active"{% endif %}>Aircraft Effects</a>
+  <a href="/manual/connections.html"{% if page.url == "/manual/connections.html" %} class="is-active"{% endif %}>Connections</a>
+  <a href="/manual/devices.html"{% if page.url == "/manual/devices.html" %} class="is-active"{% endif %}>Output Devices</a>
+  <a href="/manual/settings.html"{% if page.url == "/manual/settings.html" %} class="is-active"{% endif %}>Settings</a>
+  <a href="/manual/explore.html"{% if page.url == "/manual/explore.html" %} class="is-active"{% endif %}>Explore the UI</a>
+</nav>
+<style>
+  .manual-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin: 0 0 1.75rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.3);
+    font-size: 0.92rem;
+  }
+  .manual-nav a {
+    padding: 4px 11px;
+    border-radius: 999px;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.65;
+    white-space: nowrap;
+  }
+  .manual-nav a:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+  .manual-nav a.is-active {
+    opacity: 1;
+    font-weight: 600;
+    background: rgba(127, 127, 127, 0.18);
+  }
+</style>
