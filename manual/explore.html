@@ -551,6 +551,8 @@ layout: null
   .debug-title .src { color: var(--text-faintest); font-family: var(--mono); font-size: 11.5px; margin-left: 8px; }
   .debug-body { padding: 12px 14px; font-family: var(--mono); font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; white-space: pre-wrap; }
   .debug-actions { display: flex; gap: 8px; }
+  .debug-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 8px 14px; border-top: 1px solid var(--card-border); font-family: var(--mono); font-size: 12px; color: var(--text-faintest); }
+  .debug-footer .warn { color: var(--amber-text); }
 
   /* ===================================================================
      Output Devices page
@@ -701,9 +703,9 @@ layout: null
           </div>
           <div class="hs device-ind" tabindex="0"
                data-help-title="Sound Module Indicator"
-               data-help-text="Same three-state logic as the JetSeat indicator: green means the Sound Module process is running, red means it's enabled but not found, gray means Sound Module output is off. Both outputs can be active at once in Simultaneous mode."
+               data-help-text="Same three-state logic as the JetSeat indicator: green means the Sound Module process is running, gray means Sound Module output is off — as shown here. If a device is enabled but its handler can't be found, the dot turns red and a small 'not running' badge appears next to the name instead. Both outputs can be active at once in Simultaneous mode."
                data-help-link="/manual/devices.html#device-indicators">
-            <span class="dot missing"></span>Sound Module<span class="not-running">not running</span>
+            <span class="dot"></span>Sound Module
           </div>
         </div>
       </div>
@@ -751,7 +753,7 @@ layout: null
                      data-help-title="Simulator Picker"
                      data-help-text="Selects which simulator's profile set you're editing. The currently running sim is marked with a green dot and bold text; use the Reload button next to it to re-scan for a newly detected aircraft."
                      data-help-link="/manual/effects.html#simulator-aircraft">
-                  <span>DCS World</span><span class="chev">▾</span>
+                  <span>DCS</span><span class="chev">▾</span>
                 </div>
               </div>
               <div class="picker-group aircraft">
@@ -760,7 +762,7 @@ layout: null
                      data-help-title="Aircraft Picker"
                      data-help-text="Selects the aircraft model whose effect profile is shown below. The aircraft actually detected in the sim is marked the same way as the simulator picker, and a generic/fallback profile is used when no aircraft-specific one exists."
                      data-help-link="/manual/effects.html#simulator-aircraft">
-                  <span>F/A-18C Hornet</span><span class="chev">▾</span>
+                  <span>F/A-18</span><span class="chev">▾</span>
                 </div>
               </div>
               <div class="btn">↻ Reload</div>
@@ -768,8 +770,8 @@ layout: null
                    data-help-title="In-Sim Aircraft Pill"
                    data-help-text="Shows what SimShaker actually sees from the running simulator right now: the live aircraft and its detected type. It turns red and shows 'none' whenever nothing is currently flying, independent of whatever profile you have selected above."
                    data-help-link="/manual/index.html#first-run">
-                <span class="dot"></span>In sim <strong>F/A-18C Hornet</strong>
-                <span class="sep"></span>Type <strong>FixedWing</strong>
+                <span class="dot"></span>In sim <strong>F/A-18</strong>
+                <span class="sep"></span>Type <strong>JET</strong>
               </div>
             </div>
 
@@ -788,9 +790,9 @@ layout: null
                   <span class="effect-chevron invisible">▸</span>
                   <div class="effect-name-wrap">
                     <span class="hs effect-name" tabindex="0"
-                          data-help-title="Effect Row: Runway Rumble"
-                          data-help-text="Each row is one effect SimShaker can generate — for example runway rumble, engine vibration, or a touchdown bump. The full list of effect names and what each represents is documented in the effect glossary."
-                          data-help-link="/manual/effects.html#effect-glossary">Runway Rumble</span>
+                          data-help-title="Effect Row: Ground Bumps"
+                          data-help-text="Each row is one effect SimShaker can generate — for example ground bumps, engine rumble, or a touchdown bump. The full list of effect names and what each represents is documented in the effect glossary."
+                          data-help-link="/manual/effects.html#effect-glossary">Ground Bumps</span>
                   </div>
                   <span class="hs" tabindex="0"
                         data-help-title="Effect On/Off Switch"
@@ -817,16 +819,16 @@ layout: null
                 </div>
               </div>
 
-              <!-- Row 2: expanded row with slider / stepper / toggle params -->
+              <!-- Row 2: expanded row with a real stepper parameter -->
               <div class="effect-row">
                 <div class="effect-row-main">
                   <span class="hs effect-chevron" tabindex="0"
                         data-help-title="Expand Chevron"
-                        data-help-text="Effects with tunable behavior show a ▸ chevron and a summary chip (like '3 params'). Click either to expand an inline panel with that effect's specific parameters — no separate editor window needed."
+                        data-help-text="Effects with tunable behavior show a ▸ chevron and a 'Parameters' chip (or 'Configurator' for turbulence). Click either to expand an inline panel with that effect's specific parameters — no separate editor window needed."
                         data-help-link="/manual/effects.html#parameters">▾</span>
                   <div class="effect-name-wrap">
-                    <span class="effect-name">Engine Vibrations</span>
-                    <span class="param-chip">3 params</span>
+                    <span class="effect-name">Engine Rumble/Piston Beat</span>
+                    <span class="param-chip">Parameters</span>
                   </div>
                   <span class="switch on"><span class="knob"></span></span>
                   <div class="vol-cell">
@@ -843,31 +845,81 @@ layout: null
 
                 <div class="expanded-panel">
                   <div class="hs param-item" tabindex="0"
-                       data-help-title="Slider Parameter"
-                       data-help-text="A continuous parameter with its own draggable slider and live numeric readout, independent of the JetSeat/Sound Module volume sliders — used for things like frequency or ramp time."
-                       data-help-link="/manual/effects.html#parameters">
-                    <span class="p-label">Frequency</span>
-                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:55%;"></div><div class="thumb" style="left:52px;"></div></div>
-                    <span class="vol-value">55</span>
-                  </div>
-                  <div class="hs param-item" tabindex="0"
                        data-help-title="Stepper Parameter"
-                       data-help-text="An integer parameter (e.g. a repeat count or an RPM threshold) adjusted with the ▲▼ arrows. The current value is shown in the small mono readout between them."
+                       data-help-text="An integer parameter adjusted with the ▲▼ arrows — most parameterized effects have exactly one, like Engine Rumble's airborne damping shown here. The current value is shown in the small mono readout between the arrows."
                        data-help-link="/manual/effects.html#parameters">
-                    <span class="p-label">Idle RPM threshold</span>
+                    <span class="p-label">Reduce when airborne (%)</span>
                     <div class="stepper"><span class="val">18</span><span class="arrows"><span>▲</span><span>▼</span></span></div>
-                  </div>
-                  <div class="hs param-item" tabindex="0"
-                       data-help-title="Toggle Parameter"
-                       data-help-text="A simple on/off switch for a boolean behavior of the effect, such as whether it fades in smoothly instead of triggering instantly."
-                       data-help-link="/manual/effects.html#parameters">
-                    <span class="switch on"><span class="knob"></span></span>
-                    <span class="p-label">Smooth ramp</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Row 3: firing indicator -->
+              <!-- Row 3: expanded row with real slider + toggle parameters -->
+              <div class="effect-row">
+                <div class="effect-row-main">
+                  <span class="hs effect-chevron" tabindex="0"
+                        data-help-title="Expand Chevron"
+                        data-help-text="Effects with tunable behavior show a ▸ chevron and a 'Parameters' chip (or 'Configurator' for turbulence). Click either to expand an inline panel with that effect's specific parameters — no separate editor window needed."
+                        data-help-link="/manual/effects.html#parameters">▾</span>
+                  <div class="effect-name-wrap">
+                    <span class="effect-name">G-Force Effect</span>
+                    <span class="param-chip">Parameters</span>
+                  </div>
+                  <span class="switch on"><span class="knob"></span></span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:65%;"></div><div class="thumb" style="left:61px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:0%;"></div></div>
+                  </div>
+                  <span class="vol-value">65</span>
+                  <div class="vol-cell">
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:35%;"></div><div class="thumb" style="left:33px;"></div></div>
+                    <div class="livebar"><div class="fill" style="width:0%;"></div></div>
+                  </div>
+                  <span class="vol-value">35</span>
+                </div>
+
+                <div class="expanded-panel">
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Slider Parameter"
+                       data-help-text="A fractional parameter with its own small slider and live numeric readout, independent of the JetSeat/Sound Module volume sliders — G-Force Effect uses two of these to set its deadzones."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="p-label">Deadzone negative (g)</span>
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:33%;"></div><div class="thumb" style="left:30px;"></div></div>
+                    <span class="vol-value">1.0</span>
+                  </div>
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Slider Parameter"
+                       data-help-text="A fractional parameter with its own small slider and live numeric readout, independent of the JetSeat/Sound Module volume sliders — G-Force Effect uses two of these to set its deadzones."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="p-label">Deadzone positive (g)</span>
+                    <div class="mini-slider"><div class="track"></div><div class="fill" style="width:50%;"></div><div class="thumb" style="left:47px;"></div></div>
+                    <span class="vol-value">1.5</span>
+                  </div>
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Toggle Parameter"
+                       data-help-text="A simple on/off switch for a boolean behavior of the effect — G-Force Effect has three of these, to ignore roll data and to control whether it stays active on the ground or shuts off while airborne."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="switch"><span class="knob"></span></span>
+                    <span class="p-label">Ignore roll data</span>
+                  </div>
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Toggle Parameter"
+                       data-help-text="A simple on/off switch for a boolean behavior of the effect — G-Force Effect has three of these, to ignore roll data and to control whether it stays active on the ground or shuts off while airborne."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="switch on"><span class="knob"></span></span>
+                    <span class="p-label">Active on ground</span>
+                  </div>
+                  <div class="hs param-item" tabindex="0"
+                       data-help-title="Toggle Parameter"
+                       data-help-text="A simple on/off switch for a boolean behavior of the effect — G-Force Effect has three of these, to ignore roll data and to control whether it stays active on the ground or shuts off while airborne."
+                       data-help-link="/manual/effects.html#parameters">
+                    <span class="switch"><span class="knob"></span></span>
+                    <span class="p-label">Off while airborne</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 4: firing indicator -->
               <div class="effect-row">
                 <div class="effect-row-main">
                   <span class="effect-chevron invisible">▸</span>
@@ -889,11 +941,11 @@ layout: null
                 </div>
               </div>
 
-              <!-- Row 4: disabled effect -->
+              <!-- Row 5: disabled effect -->
               <div class="effect-row off">
                 <div class="effect-row-main">
                   <span class="effect-chevron invisible">▸</span>
-                  <div class="effect-name-wrap"><span class="effect-name">Speed Brakes</span></div>
+                  <div class="effect-name-wrap"><span class="effect-name">Speedbrake Shudders</span></div>
                   <span class="switch"><span class="knob"></span></span>
                   <div class="vol-cell">
                     <div class="mini-slider"><div class="track"></div><div class="fill" style="width:50%;"></div><div class="thumb" style="left:47px;"></div></div>
@@ -908,13 +960,13 @@ layout: null
                 </div>
               </div>
 
-              <!-- Row 5: turbulence, with a compact configurator hint -->
+              <!-- Row 6: turbulence, with a compact configurator hint -->
               <div class="effect-row">
                 <div class="effect-row-main">
                   <span class="effect-chevron" style="color:var(--accent);">▾</span>
                   <div class="effect-name-wrap">
                     <span class="effect-name">Turbulence</span>
-                    <span class="param-chip">configurator</span>
+                    <span class="param-chip">Configurator</span>
                   </div>
                   <span class="switch on"><span class="knob"></span></span>
                   <div class="vol-cell">
@@ -930,9 +982,9 @@ layout: null
                 </div>
                 <div class="hs turbulence-hint" tabindex="0"
                      data-help-title="Turbulence Configurator"
-                     data-help-text="Turbulence has its own inline configurator instead of plain parameters: a live graph of the incoming wind delta, a filter-function curve that shapes it, and the resulting effect strength — all three update live while you fly, plus a filter-function picker and a reset-to-defaults button."
+                     data-help-text="Turbulence has its own inline configurator instead of the plain parameter list: four numeric thresholds (Threshold, Threshold strong, Min effect strength, Max effect input), a filter-function picker with a Reset filter button, and three live graphs — the incoming wind delta, the filter-function curve that shapes it, and the resulting effect strength — all sampled from live telemetry while flying."
                      data-help-link="/manual/effects.html#turbulence">
-                  Replaces the plain parameter list with a live wind-input graph, a filter-function preview and the resulting effect strength — all sampled from live telemetry while flying.
+                  Replaces the plain parameter list with four threshold values, a filter-function picker, and live graphs of the wind input, the filter curve and the resulting effect strength — all sampled from live telemetry while flying.
                   <div><span class="tag">Δ V_Wind graph</span><span class="tag">filter curve</span><span class="tag">resulting strength</span></div>
                 </div>
               </div>
@@ -941,16 +993,16 @@ layout: null
             <div class="effects-footer">
               <div class="hs btn small" tabindex="0"
                    data-help-title="Copy Settings"
-                   data-help-text="Save profile writes every change on this page to the settings database on disk. Reset discards unsaved changes and reverts every effect back to the last saved values. Copy settings opens a dialog to copy this aircraft's whole effect configuration onto another aircraft or simulator profile."
+                   data-help-text="Opens a dialog to copy this aircraft's current effect settings onto another target: the aircraft-type template used for newly detected aircraft of that type, one other specific aircraft, or every aircraft of the same type at once."
                    data-help-link="/manual/effects.html#copy-reset">Copy settings</div>
               <div class="vdiv"></div>
               <div class="hs btn small" tabindex="0"
                    data-help-title="Reset"
-                   data-help-text="Reset discards unsaved changes on this page and reverts every effect back to the values that were last saved to disk for this aircraft profile."
+                   data-help-text="Reset discards unsaved changes on this page and reverts every effect back to the values that were last saved to disk for this aircraft profile. It's only enabled while there are unsaved changes."
                    data-help-link="/manual/effects.html#copy-reset">Reset</div>
               <div class="hs btn primary" tabindex="0"
                    data-help-title="Save Profile"
-                   data-help-text="Writes every change on this page — enabled effects, volumes and parameters — to the settings database on disk, so it survives an app restart and is available to Copy settings for other profiles."
+                   data-help-text="Writes every change on this page — enabled effects, volumes and parameters — to the settings database on disk, so it survives an app restart and is available to Copy settings for other profiles. Only enabled while there are unsaved changes, and briefly shows a ✓ Saved confirmation afterwards."
                    data-help-link="/manual/effects.html#copy-reset">Save profile</div>
             </div>
           </section>
@@ -1000,17 +1052,21 @@ layout: null
 
             <div class="hs card debug-panel" tabindex="0"
                  data-help-title="Live Telemetry / Debug Panel"
-                 data-help-text="A live, read-only snapshot of whatever the currently connected simulator is sending — useful for troubleshooting missing effects. It auto-detects which sim is active, can be paused to freeze a snapshot, copied to the clipboard for a bug report, or popped out into its own window."
+                 data-help-text="A live, read-only snapshot of whatever the currently connected simulator is sending — useful for troubleshooting missing effects. It auto-detects which sim is active, can be paused to freeze a snapshot, copied to the clipboard for a bug report, or popped out into its own window. While it's live and unpaused, a footer note warns that building the snapshot text costs a little performance."
                  data-help-link="/manual/connections.html#troubleshooting">
               <div class="debug-head">
-                <span class="debug-title">DCS <span class="src">UDP 29005 · Export.lua</span></span>
+                <span class="debug-title">DEBUG VIEW<span class="src">— DCS</span></span>
                 <div class="debug-actions">
                   <div class="btn small">⏸ Pause</div>
                   <div class="btn small">Copy</div>
-                  <div class="btn small">Pop out ⧉</div>
+                  <div class="btn small">⧉ Pop out</div>
                 </div>
               </div>
               <div class="debug-body">Altitude: 4520 ft&#10;IAS: 238 kts&#10;AoA: 4.1°&#10;G-Load: 1.2&#10;Gear: up · Flaps: 0%&#10;Engine RPM: 91% / 91%</div>
+              <div class="debug-footer">
+                <span>live data snapshot</span>
+                <span><span class="warn">receiving data · logging may reduce performance</span> &nbsp; UDP 29375 · Export.lua</span>
+              </div>
             </div>
           </section>
 
@@ -1078,7 +1134,7 @@ layout: null
                    data-help-title="Massage Mode Card"
                    data-help-text="Runs a fixed test pattern across the seat's motors — handy for demonstrating the seat or checking every motor responds. Repetitions controls how many cycles ▶ Start plays before stopping automatically; ■ Stop cancels it immediately."
                    data-help-link="/manual/devices.html#massage-mode">
-                <span class="card-title">Massage mode</span>
+                <span class="card-title">MASSAGE MODE</span>
                 <div class="massage-controls">
                   <div class="btn primary small">▶ Start</div>
                   <div class="btn small">■ Stop</div>
@@ -1100,7 +1156,7 @@ layout: null
                    data-help-title="Updates Card"
                    data-help-text="Controls whether SimShaker checks GitHub for a newer release every time it starts, and shows the currently installed version underneath."
                    data-help-link="/manual/settings.html#updates">
-                <span class="card-title">Updates</span>
+                <span class="card-title">UPDATES</span>
                 <div class="row switch-row"><span class="switch on"><span class="knob"></span></span><span class="switch-label">Check for updates on startup</span></div>
                 <p class="card-desc">SimShaker for Aviators · Version 3.0.44</p>
               </div>
@@ -1109,7 +1165,7 @@ layout: null
                    data-help-title="Folders Card"
                    data-help-text="One-click shortcuts to open the SSA install folder, the SSA config/profile folder, and the DCS Export scripts folder (auto-detected under Saved Games) in Windows Explorer."
                    data-help-link="/manual/settings.html#folders">
-                <span class="card-title">Folders</span>
+                <span class="card-title">FOLDERS</span>
                 <div class="row" style="gap:8px; flex-wrap:wrap;">
                   <div class="btn small">SSA Install Folder</div>
                   <div class="btn small">SSA Config Folder</div>
@@ -1123,7 +1179,7 @@ layout: null
                    data-help-title="Performance Card"
                    data-help-text="Limits how often incoming simulator telemetry is processed — None applies every update, 100 ms or 250 ms throttle it, trading a little effect responsiveness for lower CPU load on slower systems."
                    data-help-link="/manual/settings.html#performance">
-                <span class="card-title">Performance</span>
+                <span class="card-title">PERFORMANCE</span>
                 <div class="row between" style="display:flex; justify-content:space-between; align-items:center;">
                   <span class="switch-label">Frame rate limiter</span>
                   <div class="combo" style="width:120px;"><span>None</span><span class="chev">▾</span></div>
@@ -1136,7 +1192,7 @@ layout: null
                    data-help-text="Launches the standalone SSA Tester tool, which can record real simulator telemetry to a file and replay it later — useful for testing effects and profiles without needing the aircraft or simulator running."
                    data-help-link="/manual/settings.html#tester">
                 <div class="row between" style="display:flex; justify-content:space-between; align-items:center; margin-top:0;">
-                  <span class="card-title">SSA Tester</span>
+                  <span class="card-title">SSA TESTER</span>
                   <div class="btn small">↗ Launch SSA Tester</div>
                 </div>
                 <p class="card-desc">Standalone tool to record and replay simulation telemetry.</p>
@@ -1149,7 +1205,7 @@ layout: null
                    data-help-text="Export writes every profile and setting to a single XML file; Import loads one back, accepting both the current XML format and the legacy v2 binary format from older SimShaker versions."
                    data-help-link="/manual/settings.html#backup-restore">
                 <div class="row between" style="display:flex; justify-content:space-between; align-items:center; margin-top:0;">
-                  <span class="card-title">Backup &amp; Restore</span>
+                  <span class="card-title">BACKUP &amp; RESTORE</span>
                   <div class="row" style="gap:8px; margin-top:0;">
                     <div class="btn small">Import…</div>
                     <div class="btn small">Export…</div>
@@ -1163,7 +1219,7 @@ layout: null
                    data-help-text="Resets the entire settings database — every profile, every effect tweak, every setting — back to factory defaults. This cannot be undone, and a confirmation dialog is shown before anything is erased."
                    data-help-link="/manual/settings.html#danger-zone">
                 <div class="row between" style="display:flex; justify-content:space-between; align-items:center; margin-top:0;">
-                  <span class="card-title" style="color:#c98a90;">Danger Zone</span>
+                  <span class="card-title" style="color:#c98a90;">DANGER ZONE</span>
                   <div class="btn danger small">Reset Settings Database…</div>
                 </div>
                 <p class="card-desc">Resets all profiles and settings to factory defaults. Cannot be undone.</p>
@@ -1175,7 +1231,7 @@ layout: null
                  data-help-text="Quick links to the changelog, FAQ, project website, Discord server and a way to support development by email — SimShaker for Aviators is free software maintained in the developers' spare time."
                  data-help-link="/manual/settings.html#help-community">
               <div>
-                <span class="card-title">Help &amp; community</span>
+                <span class="card-title">HELP &amp; COMMUNITY</span>
                 <p class="card-desc">SimShaker for Aviators is free — support keeps development going.</p>
               </div>
               <div class="help-links">
@@ -1190,20 +1246,19 @@ layout: null
 
             <div class="hs card log-panel" tabindex="0"
                  data-help-title="Log Panel"
-                 data-help-text="A live view of the application's internal log. Verbose logging (off by default, since it costs performance) also shows debug-level messages; the log can be paused, cleared, copied to the clipboard for bug reports, or popped out into its own window."
+                 data-help-text="A live view of the application's internal log. Off by default, since it costs performance — only error and fatal-level messages appear here until Verbose is switched on, which lowers the threshold to also show info and debug messages. The log can be paused, cleared, copied to the clipboard for bug reports, or popped out into its own window."
                  data-help-link="/manual/settings.html#log">
               <div class="log-head">
-                <span class="debug-title">Application log</span>
+                <span class="debug-title">LOG</span>
                 <div class="debug-actions">
                   <div class="switch-row"><span class="switch"><span class="knob"></span></span><span class="switch-label" style="font-size:12px;">Verbose</span></div>
                   <div class="btn small">⏸ Pause</div>
+                  <div class="btn small">Clear</div>
                   <div class="btn small">Copy</div>
-                  <div class="btn small">Pop out ⧉</div>
+                  <div class="btn small">⧉ Pop out</div>
                 </div>
               </div>
               <div class="log-body">
-                <div class="log-line"><span class="lvl-info">18:42:11.204  INFO   Settings database loaded</span></div>
-                <div class="log-line"><span class="lvl-info">18:42:12.981  INFO   DCS Export.lua verified</span></div>
                 <div class="log-line"><span class="lvl-error">18:44:03.552  ERROR  Sound Module process not found</span></div>
               </div>
             </div>
